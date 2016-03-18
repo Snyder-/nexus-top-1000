@@ -48,21 +48,21 @@ describe Characters do
   context '#find' do
     it 'should return the correct ranked player' do
       list = Characters.new
-      result = list.find(1)
+      result = list.rank(1)
 
       expect(result).to eq(list.top_1000[0])
     end
 
     it 'returns empty array with a bad rank' do
       list = Characters.new
-      result = list.find(1001)
+      result = list.rank(1001)
 
       expect(result).to eq([])
     end
 
     it 'returns empty array with negative numbers' do
       list = Characters.new
-      result = list.find(-333)
+      result = list.rank(-333)
 
       expect(result).to eq([])
     end

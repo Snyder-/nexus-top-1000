@@ -1,19 +1,25 @@
 require 'nokogiri'
 require 'open-uri'
+require 'pp'
 
 class Characters
-  def initialize
-    @results = page.css('td a') { |link| link.content }
+  def initialize(path: :ALL)
+    @path = char_path(path)
+    @results = page(@path).css('td a') { |link| link.content }
   end
 
   def top_1000
     @tops ||= @results.map {|char| char.content }.to_a
   end
 
-  def find(number)
+  def path
+    @original_path
+  end
+
+  def rank(number)
     if number < 1
       []
-    elsif number > @results.size
+    elsif number > path_size
       []
     else
       top_1000[number - 1]
@@ -21,7 +27,6 @@ class Characters
   end
 
   def find_by(string, case_sensitive: false)
-
     if case_sensitive
       result = @results.select { |link| link.text.include?(string) }.map { |char| char.text }
     else
@@ -38,8 +43,8 @@ class Characters
 
   private
 
-  def page
-    @topchars ||= Nokogiri::HTML(open('http://users.nexustk.com/webreport/PowerAll.htm'))
+  def page(address)
+    @topchars ||= Nokogiri::HTML(open(address))
   end
 
   def list_empty?(list)
@@ -58,14 +63,25 @@ class Characters
       list.each { |char| puts char }
     end
   end
+
+  def char_path(selection)
+    options = {
+      ALL: "http://users.nexustk.com/webreport/PowerAll.htm",
+      MAGE: "http://users.nexustk.com/webreport/PowerMage.htm",
+      WARRIOR: "http://users.nexustk.com/webreport/PowerWarrior.htm",
+      ROGUE: "http://users.nexustk.com/webreport/PowerRogue.htm",
+      POET: "http://users.nexustk.com/webreport/PowerPoet.htm"
+    }
+    @original_path = selection.upcase.intern
+    path = options[@original_path] || options[:ALL]
+  end
+
+  def path_size
+    if @original_path == :ALL
+      return 1000
+    else
+      return 250
+    end
+  end
 end
 
-# list = Characters.new
-# # find_by "sna"
-# list.find_by("hair")
-# list.find_by("HAIR", case_sensitive: true)
-
-# list.find_by("dark", case_sensitive: true)
-# list.find_by("dark")
-# # puts top_1000
-# p list.top_1000
