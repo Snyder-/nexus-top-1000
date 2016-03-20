@@ -12,20 +12,23 @@
 
 ### USAGE
 
-#### Create a list of top 250 of a certain path (Mage, Warrior, Rogue, Poet)
+#### Create a list of top 250 of a certain path
+###### (ex. Mage, Warrior, Rogue, Poet)
 
 ``` ruby
 mage_list = CharacterList.new(path: :mage)
 ```
 
-#### Return a list narrowed down by searching path, subpath, or name (case is ignored by default)
+#### Return a list narrowed down by searching path, subpath, or name.
+######(case is ignored by default)
 
 ``` ruby
 non_subpath_mages = mage_list.find_by('sA sAn (m)')
 ```
 
 ##### OR
-#### Return a list searched with case sensitivity on (ex. "Greedo" won't match "Merchant greedo (99)")
+#### Return a list searched with case sensitivity on
+###### (ex. "Greedo" won't match "Merchant greedo (99)")
 
 ``` ruby
  sa_diviners = mage_list.find_by('Visionary', case_sensitive: true)
