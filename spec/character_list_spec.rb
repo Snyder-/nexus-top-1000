@@ -3,6 +3,8 @@ require 'spec_helper'
 describe CharacterList do
 
   before :all do
+    # Memoize both lists in order to stop new GET requests being
+    # sent via Nokogiri.
     @one_thousand_characters ||= CharacterList.new
     @two_fifty_characters ||= CharacterList.new(path: :MAGE)
   end
@@ -31,28 +33,18 @@ describe CharacterList do
 
   context '#find_by' do
     it 'returns a list searched case insensitive' do
-      top_players = mock_players
+      list = @one_thousand_characters
+      result = list.find_by("Sa san")
 
-      allow(CharacterList).to receive(:new).and_return(top_players)
-      allow(top_players).to receive(:find_by).with("player999").and_return(top_players.last)
-
-      list = create(:character_list)
-      result = list.find_by("player999")
-
-      expect(list).to have_received(:find_by).with("player999")
-      expect(result).to eq("Il San player999")
+      expect(result).to include("Sa San (M) Chronosphere (Sa San)").or include("Behemoth Crucial (Sa San)")
     end
 
     it 'returns a list searched case sensitive' do
-      top_players = mock_players
+      list = @one_thousand_characters
 
-      allow(CharacterList).to receive(:new).and_return(top_players)
-      allow(top_players).to receive(:find_by).with("Grease", path: "Mage").and_return(["Il san (M) GreaseWeazel", "Sa san (W) MacGreaser"])
+      result = list.find_by("chronosphere", case_sensitive: true)
 
-      list = create(:character_list)
-      result = list.find_by("Grease", path: "Mage")
-
-      expect(result.first).to eq("Il san (M) GreaseWeazel")
+      expect(result).not_to include("Sa San (M) Chronosphere (Sa San)")
     end
 
   end
@@ -62,7 +54,7 @@ describe CharacterList do
       list = @one_thousand_characters
       result = list.rank(1)
 
-      expect(result).to eq(list.all_chars[0])
+      expect(result).to eq(list.all_chars.first)
     end
 
     context 'with 1000 characters' do

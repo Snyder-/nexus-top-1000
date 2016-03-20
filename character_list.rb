@@ -59,7 +59,7 @@ class CharacterList
   end
 
   def gather_results_insensitive(string)
-    string = string.downcase
-    result = @results.select { |link| link.text.include?(string) }.map { |chars| chars.text }
+    result = @results.select { |link| link.text.downcase.include?(string.downcase) }
+    result.map { |chars| chars.text }
   end
 end
