@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# Add chruby to non-interactive shell
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+
+# Exit if chruby doesn't exist
+command -v chruby >/dev/null 2>&1 || { echo >&2 "Please install chruby to continue..."; exit 1; }
+
+# Make sure ruby is at 2.3.0
+echo
+echo "######### Setup in progress #########"
+CURRENT_RUBY=`chruby | grep "* ruby"`
+echo "Current Ruby Version($CURRENT_RUBY)"
+
+if [ "$CURRENT_RUBY" != ' * ruby-2.3.0' ]; then
+  echo "Changing to Ruby 2.3.0"
+  chruby 2.3.0
+else
+  echo "No need to change ruby! =)"
+fi
+
+# Run bundle and example file
+echo
+echo "######### Get required Gems #########"
+echo
+
+bundle install
+
+echo
+echo "######### Run Tests #########"
+command rspec
+
+echo
+echo "######### Run Examples #########"
+echo
+
+ruby example_use.rb
+
+echo
+echo "######### FINISHED #########"
+echo

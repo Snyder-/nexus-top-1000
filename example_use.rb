@@ -5,7 +5,7 @@ require_relative 'character_list'
 list = CharacterList.new
 
 # Print all of the characters.
-list.all_chars.each {|char| puts char }
+# list.all_chars.each {|char| puts char }
 
 # Create a list of top 250 of a certain path (Mage, Warrior, Rogue, Poet)
 mage_list = CharacterList.new(path: :mage)
