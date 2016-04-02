@@ -56,12 +56,10 @@ class CharacterList
   end
 
   def gather_results(string)
-    @results.select { |link| link.text.include?(string) }.map(&:text)
+    all_chars.select { |char| char.include?(string) }
   end
 
   def gather_results_insensitive(string)
-    @results.select do |link|
-      link.text.downcase.include?(string.downcase)
-    end.map(&:text)
+    all_chars.select { |char| char.downcase.include?(string.downcase) }
   end
 end
