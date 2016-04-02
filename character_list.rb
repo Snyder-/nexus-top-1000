@@ -2,15 +2,16 @@ require 'nokogiri'
 require 'open-uri'
 require 'pp'
 
+# Gathers characters in a list from NexusTK
 class CharacterList
   def initialize(path: :ALL)
     @path = path
     @url = path_url
-    @results = page(@url).css('td a') { |link| link.content }
+    @results = page(@url).css('td a', &:content)
   end
 
   def all_chars
-    @tops ||= @results.map {|char| char.content }
+    @tops ||= @results.map(&:content)
   end
 
   def path
@@ -41,25 +42,26 @@ class CharacterList
 
   def path_url
     options = {
-      ALL: "http://users.nexustk.com/webreport/PowerAll.htm",
-      MAGE: "http://users.nexustk.com/webreport/PowerMage.htm",
-      WARRIOR: "http://users.nexustk.com/webreport/PowerWarrior.htm",
-      ROGUE: "http://users.nexustk.com/webreport/PowerRogue.htm",
-      POET: "http://users.nexustk.com/webreport/PowerPoet.htm"
+      ALL: 'http://users.nexustk.com/webreport/PowerAll.htm',
+      MAGE: 'http://users.nexustk.com/webreport/PowerMage.htm',
+      WARRIOR: 'http://users.nexustk.com/webreport/PowerWarrior.htm',
+      ROGUE: 'http://users.nexustk.com/webreport/PowerRogue.htm',
+      POET: 'http://users.nexustk.com/webreport/PowerPoet.htm'
     }
     options[@path.upcase.intern] || options[:ALL]
   end
 
   def path_size
-   all_chars.count
+    all_chars.count
   end
 
   def gather_results(string)
-    @results.select { |link| link.text.include?(string) }.map { |char| char.text }
+    @results.select { |link| link.text.include?(string) }.map(&:text)
   end
 
   def gather_results_insensitive(string)
-    result = @results.select { |link| link.text.downcase.include?(string.downcase) }
-    result.map { |chars| chars.text }
+    @results.map(&:text).tap do
+      @results.select { |link| link.text.downcase.include?(string.downcase) }
+    end
   end
 end
