@@ -1,5 +1,5 @@
 verbose false # eliminate noise from FileUtils library
-task default: %w[test]
+task default: %w(test)
 
 desc "Run Tests"
 task :test do
@@ -12,7 +12,6 @@ task :task do
 end
 
 namespace :cron do
-  
   desc "Load cronjobs"
   task :start do
     puts "Creating cron jobs from config/schedule.rb..."
@@ -24,15 +23,15 @@ namespace :cron do
   task :stop do
     begin
       puts "Removing running jobs."
-    sh 'crontab -r'
-    puts "Removed all jobs."
+      sh 'crontab -r'
+      puts "Removed all jobs."
     rescue
       puts "No jobs in queue."
     end
   end
 
   desc "List all cron jobs"
-  task :list do |t|
+  task :list do
     begin
       puts "Checking for cron jobs..."
       sh 'crontab -l'

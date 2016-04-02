@@ -60,8 +60,8 @@ class CharacterList
   end
 
   def gather_results_insensitive(string)
-    @results.map(&:text).tap do
-      @results.select { |link| link.text.downcase.include?(string.downcase) }
-    end
+    @results.select do |link|
+      link.text.downcase.include?(string.downcase)
+    end.map(&:text)
   end
 end

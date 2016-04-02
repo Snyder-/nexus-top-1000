@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe CharacterList do
-
   before :all do
     # Memoize both lists in order to stop new GET requests being
     # sent via Nokogiri.
@@ -34,9 +33,10 @@ describe CharacterList do
   context '#find_by' do
     it 'returns a list searched case insensitive' do
       list = @one_thousand_characters
-      result = list.find_by("Sa san")
+      result = list.find_by("sa san")
 
-      expect(result).to include("Sa San (M) Chronosphere (Sa San)").or include("Behemoth Crucial (Sa San)")
+      expect(result).to include(/Sa San/i)
+      expect(result).not_to include(/Sam San/i)
     end
 
     it 'returns a list searched case sensitive' do
@@ -44,9 +44,17 @@ describe CharacterList do
 
       result = list.find_by("chronosphere", case_sensitive: true)
 
-      expect(result).not_to include("Sa San (M) Chronosphere (Sa San)")
+      expect(result).not_to include(/chronosphere/i)
     end
 
+    it 'returns the specified path' do
+      list = @two_fifty_characters
+
+      result = list.find_by("Visionary")
+
+      expect(result).not_to include(/Il San/)
+      expect(result).not_to include("Sam San (M) SnakeEyes (Sam San)")
+    end
   end
 
   context '#rank' do
