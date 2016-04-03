@@ -34,6 +34,11 @@ non_subpath_mages = mage_list.find_by('sA sAn (m)')
  sa_diviners = mage_list.find_by('Visionary', case_sensitive: true)
 ```
 
+#### Get the character at a certain ranking
+
+``` ruby
+puts sa_diviners.rank(1) #=> Visionary TopMage (Sa San)
+```
 
 
 #### Print all mages with no subpath
