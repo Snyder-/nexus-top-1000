@@ -5,7 +5,7 @@ class ListSearcher
     @list = char_list
   end
 
-  def find_by(string, case_sensitive: false)
+  def find_by(string, case_sensitive)
     if case_sensitive
       gather_results(string)
     else

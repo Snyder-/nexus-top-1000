@@ -29,11 +29,7 @@ class CharacterList
   end
 
   def find_by(string, case_sensitive: false)
-    if case_sensitive
-      @searcher.find_by(string, case_sensitive: case_sensitive)
-    else
-      @searcher.find_by(string)
-    end
+    @searcher.find_by(string, case_sensitive)
   end
 
   private
