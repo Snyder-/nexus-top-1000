@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'pp'
+require_relative 'list_searcher'
 
 # Gathers characters in a list from NexusTK
 class CharacterList
@@ -8,6 +9,7 @@ class CharacterList
     @path = path
     @url = path_url
     @results = page(@url).css('td a', &:content)
+    @searcher = ListSearcher.new(all_chars)
   end
 
   def all_chars
@@ -28,9 +30,9 @@ class CharacterList
 
   def find_by(string, case_sensitive: false)
     if case_sensitive
-      gather_results(string)
+      @searcher.find_by(string, case_sensitive: case_sensitive)
     else
-      gather_results_insensitive(string)
+      @searcher.find_by(string)
     end
   end
 
@@ -53,13 +55,5 @@ class CharacterList
 
   def path_size
     all_chars.count
-  end
-
-  def gather_results(string)
-    all_chars.select { |char| char.include?(string) }
-  end
-
-  def gather_results_insensitive(string)
-    all_chars.select { |char| char.downcase.include?(string.downcase) }
   end
 end
